@@ -15,14 +15,12 @@ public class JpaMain {
         tx.begin();
 
         try {
-            /*Member member = new Member();
-            member.setId(101L);
-            member.setName("HelloJPA");
+            Member member = new Member();
+            //member.setId("ID_A");
+            member.setUserName("C");
 
-            em.persist(member); //멤버 저장*/
-
-            Member member = new Member(200L, "member200");//데이터 찾고
-            em.persist(member);
+            //Member member = new Member(200L, "member200");//데이터 찾고
+            em.persist(member); //멤버 저장
 
             em.flush();
 
