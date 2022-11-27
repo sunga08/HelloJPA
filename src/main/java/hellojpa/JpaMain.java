@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -19,26 +20,26 @@ public class JpaMain {
             //팀 저장
             Team team = new Team();
             team.setName("TeamA");
+            //team.getMembers().add(member);
             em.persist(team);
 
             //회원 저장
             Member2 member = new Member2();
             member.setUsername("member1");
-            member.setTeam(team); //jpa가 알아서 team에서 pk 꺼내서 fk로 사용
+            member.changeTeam(team);
             em.persist(member);
 
-            em.flush();
-            em.clear();
+            //team.getMembers().add(member); //양방향 연관관계 -> 양쪽에 값을 모두 셋팅
 
-            //조회
-            Member2 findMember = em.find(Member2.class, member.getId());
+            //em.flush();
+            //em.clear();
 
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam.getName() = " + findTeam.getName());
+            Team findTeam = em.find(Team.class, team.getId()); //1차 캐시
+            List<Member2> members = findTeam.getMembers();
 
-            //팀 변경 => 외래키 변경 됨
-            Team newTeam = em.find(Team.class, 100L); //100L은 DB에 있다고 가정
-            findMember.setTeam(newTeam);
+            for(Member2 m : members){
+                System.out.println("m = " + m.getUsername());
+            }
 
             tx.commit();
         } catch (Exception e){
